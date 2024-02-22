@@ -10,4 +10,9 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CulturalShare.PostRead.Domain\CulturalShare.PostRead.Domain.csproj" />
+    <ProjectReference Include="..\CulturalShare.Posts.Data\CulturalShare.Posts.Data.csproj" />
+  </ItemGroup>
+
 </Project>

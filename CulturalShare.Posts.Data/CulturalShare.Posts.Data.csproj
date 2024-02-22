@@ -7,8 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
-    <PackageReference Include="MongoDB.Bson" Version="2.23.1" />
+    <PackageReference Include="CulturalShare.Common.DB" Version="8.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
+    <PackageReference Include="MongoDB.Bson" Version="2.24.0" />
   </ItemGroup>
 
 </Project>

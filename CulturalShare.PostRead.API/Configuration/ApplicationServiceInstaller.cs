@@ -8,12 +8,11 @@ public class ApplicationServiceInstaller : IServiceInstaller
 {
     public void Install(WebApplicationBuilder builder)
     {
-        builder.Services.AddPostsReadServices();
         builder.Services.AddPostsReadRepositories();
+        builder.Services.AddPostsReadServices();
+        builder.Services.AddPostsReadConfiguration(builder.Configuration);
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-
-        builder.Services.AddPostsReadServices();
     }
 }

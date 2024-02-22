@@ -8,41 +8,25 @@ namespace CulturalShare.PostRead.API.Services;
 [Authorize]
 public class PostsReadService : PostsRead.PostsReadBase
 {
-    private readonly IPostService _postService;
-    public PostsReadService(IPostService postService)
+    private readonly IPostReadService _postService;
+    public PostsReadService(IPostReadService postService)
     {
         _postService = postService;
     }
 
     public override async Task<PostReply> GetPostById(GetPostByIdRequest request, ServerCallContext context)
     {
-        return new PostReply()
-        {
-            Id = request.Id,
-            Text = "test",
-            Title = "A"
-        };
+        var post = await _postService.GetPostByIdAsync(request);
+        return post;
     }
 
     public override async Task<PostsList> GetPosts(GetPostsRequest request, ServerCallContext context)
     {
-        var post1 = new PostReply
-        {
-            Id = 1,
-            Title = "Title 1",
-            Text = "Text 1"
-        };
-
-        var post2 = new PostReply
-        {
-            Id = 2,
-            Title = "Title 2",
-            Text = "Text 2"
-        };
+        var posts = await _postService.GetPostsAsync();
 
         var postsList = new PostsList
         {
-            Posts = { post1, post2 }
+            Posts = { posts }
         };
 
         return postsList;

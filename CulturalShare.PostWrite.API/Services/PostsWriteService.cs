@@ -9,9 +9,9 @@ namespace CulturalShare.PostWrite.API.Services;
 [Authorize]
 public class PostsWriteService : PostsWrite.PostsWriteBase
 {
-    private readonly IPostService _postService;
+    private readonly IPostReadService _postService;
 
-    public PostsWriteService(IPostService postService)
+    public PostsWriteService(IPostReadService postService)
     {
         _postService = postService;
     }

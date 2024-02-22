@@ -21,17 +21,17 @@ using (var scope = app.Services.CreateScope())
         {
             dbContextDealerPortal.Posts.Add(new PostEntity()
             {
-                Caption = "test",
+                Caption = i.ToString() + "Caption",
                 CreatedAt = DateTime.UtcNow,
-                ImageUrl = "AAA",
+                ImageUrl = i.ToString() + "Image",
                 Likes = 0,
-                OwnerId = 1,
+                OwnerId = i,
                 Comments = new List<CommentEntity>()
                 {
                     new()
                     {
-                        OwnerId = 1,
-                        Text = "test",
+                        OwnerId = i,
+                        Text = i.ToString() + "Text",
                         CreatedAt = DateTime.UtcNow,
                         Username = "test",
                     }

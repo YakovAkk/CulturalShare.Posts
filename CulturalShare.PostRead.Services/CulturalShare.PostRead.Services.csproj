@@ -7,8 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CulturalShare.Protos" Version="8.0.0.1" />
+    <PackageReference Include="CulturalShare.Protos" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageReference Include="ValueInjecter" Version="3.2.0" />
   </ItemGroup>
 
   <ItemGroup>

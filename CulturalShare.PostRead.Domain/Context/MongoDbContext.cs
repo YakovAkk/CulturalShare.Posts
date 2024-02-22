@@ -18,6 +18,8 @@ public class MongoDbContext
     public IMongoCollection<T> GetCollection<T>()
     {
         var collectionName = typeof(T).GetTableAttributeValue();
-        return _db.GetCollection<T>(collectionName == string.Empty ? typeof(T).Name : collectionName);
+        var name = collectionName == string.Empty ? typeof(T).Name : collectionName;
+        var collection = _db.GetCollection<T>(name);
+        return collection;
     }
 }

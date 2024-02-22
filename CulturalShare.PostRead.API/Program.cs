@@ -9,10 +9,18 @@ builder.InstallServices(typeof(IServiceInstaller).Assembly);
 
 var app = builder.Build();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGrpcService<PostsReadService>();
+
+app.MapControllers();
 
 app.MapHealthChecks("/_health", new HealthCheckOptions()
 {

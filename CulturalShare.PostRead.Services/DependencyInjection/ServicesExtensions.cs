@@ -8,7 +8,7 @@ public static class ServicesExtension
 {
     public static IServiceCollection AddPostsReadServices(this IServiceCollection services)
     {
-        services.AddScoped<IPostService, PostService>();
+        services.AddScoped<IPostReadService, PostReadService>();
 
         return services;
     }
