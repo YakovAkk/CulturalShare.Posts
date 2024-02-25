@@ -20,8 +20,10 @@ public class DatabaseServiceInstaller : IServiceInstaller
         else
         {
             Console.WriteLine(builder.Configuration.GetConnectionString("PostWriteDB"));
-            builder.Services.AddDbContext<PostWriteDBContext>(options =>
+            builder.Services.AddDbContextPool<PostWriteDBContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("PostWriteDB")));
+
+            builder.Services.AddTransient<DbContext, PostWriteDBContext>();
         }   
     }
 }

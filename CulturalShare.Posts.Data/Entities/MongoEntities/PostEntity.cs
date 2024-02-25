@@ -16,8 +16,9 @@ public class PostEntity : IPostEntity
     public DateTime? UpdatedAt { get; set; }
     public string? ImageUrl { get; set; }
     public int Likes { get; set; }
-    public string? Location { get; set; }
-
+    public string? Text { get; set; }
     public int OwnerId { get; set; }
-    public ICollection<CommentEntity> Comments { get; set; }
+    public bool IsDeleted { get; set; }
+    public DateTime? DeletedAt { get; set; }
+    public ICollection<CommentEntity> Comments { get; set; }   
 }
