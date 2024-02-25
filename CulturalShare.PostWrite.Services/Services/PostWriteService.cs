@@ -29,7 +29,7 @@ public class PostWriteService : IPostWriteService
 
     public async Task<DeletePostReply> DeletePostAsync(DeletePostRequest request)
     {
-        var postEntity = await _postWriteRepository.GetAll().FirstOrDefaultAsync(x => x.Id == request.PostId);
+        var postEntity = await GetPostById(request.PostId);
 
         if (postEntity == null)
         {
@@ -50,7 +50,7 @@ public class PostWriteService : IPostWriteService
 
     public async Task<PostReply> UpdatePostAsync(UpdatePostRequest request)
     {
-        var postEntity = await _postWriteRepository.GetAll().FirstOrDefaultAsync(x => x.Id == request.PostId);
+        var postEntity = await GetPostById(request.PostId);
 
         if (postEntity == null)
         {
@@ -66,4 +66,16 @@ public class PostWriteService : IPostWriteService
 
         return postEntity.MapTo<PostReply>();
     }
+
+    #region Private
+
+    private async Task<PostEntity> GetPostById(int postId)
+    {
+        return await _postWriteRepository
+            .GetAll()
+            .FirstOrDefaultAsync(x => x.Id == postId && !x.IsDeleted);
+    }
+
+    #endregion
 }
+

@@ -15,16 +15,22 @@ public class PostReadRepository<T> : IPostReadRepository<T> where T : IBaseEntit
 
     public async Task<List<T>> GetAllAsync()
     {
-        var documents = await _mongoCollection.AsQueryable().ToListAsync();
+        var documents = await _mongoCollection
+            .AsQueryable()
+            .ToListAsync();
+
         return documents;
     }
 
     public async Task<T> GetPostByIdAsync(int id)
     {
-        var a = _mongoCollection.AsQueryable().Where(x => x.Id == id).ToList();
+        var entity = _mongoCollection
+            .AsQueryable()
+            .Where(x => x.Id == id)
+            .ToList();
 
         var document = await _mongoCollection.FindAsync(x => x.Id == id);
 
-        return a.FirstOrDefault();
+        return entity.FirstOrDefault();
     }
 }

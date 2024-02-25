@@ -1,6 +1,7 @@
 ﻿using CulturalShare.PostRead.Repositories.Repositories.Base;
 using CulturalShare.PostRead.Services.Services.Base;
 using CulturalShare.Posts.Data.Entities.MongoEntities;
+using CultureShare.Foundation.Exceptions;
 using PostsReadProto;
 
 namespace CulturalShare.PostRead.Services.Services;
@@ -17,9 +18,10 @@ public class PostReadService : IPostReadService
     public async Task<PostReply> GetPostByIdAsync(GetPostByIdRequest request)
     {
         var post = await _postRepository.GetPostByIdAsync(request.Id);
+
         if(post == null)
         {
-            throw new Exception("Post doesn't exist!");
+            throw new BadRequestException("Post doesn't exist!");
         }
 
         return post.MapTo<PostReply>();
