@@ -20,7 +20,10 @@ app.UseAuthorization();
 
 app.MapGrpcService<PostsReadService>();
 
-app.MapControllers();
+if (app.Environment.IsDevelopment())
+{
+    app.MapControllers();
+}
 
 app.MapHealthChecks("/_health", new HealthCheckOptions()
 {

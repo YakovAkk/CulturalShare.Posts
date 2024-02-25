@@ -16,6 +16,7 @@
 	<ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.0" />
+    <PackageReference Include="CulturalShare.Protos" Version="8.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
@@ -24,8 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CulturalShare.PostRead.Services\CulturalShare.PostRead.Services.csproj" />
     <ProjectReference Include="..\CulturalShare.PostWrite.Domain\CulturalShare.PostWrite.Domain.csproj" />
+    <ProjectReference Include="..\CulturalShare.PostWrite.Repositories\CulturalShare.PostWrite.Repositories.csproj" />
+    <ProjectReference Include="..\CulturalShare.PostWrite.Services\CulturalShare.PostWrite.Services.csproj" />
   </ItemGroup>
 
 </Project>

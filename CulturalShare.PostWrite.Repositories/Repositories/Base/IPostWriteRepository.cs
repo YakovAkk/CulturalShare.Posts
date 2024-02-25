@@ -1,5 +1,8 @@
-﻿namespace CulturalShare.PostWrite.Repositories.Repositories.Base;
+﻿using CulturalShare.Posts.Data.Entities.NpSqlEntities;
+using Monto.Repositories;
 
-public interface IPostWriteRepository
+namespace CulturalShare.PostWrite.Repositories.Repositories.Base;
+
+public interface IPostWriteRepository : IRepository<PostEntity>
 {
 }
