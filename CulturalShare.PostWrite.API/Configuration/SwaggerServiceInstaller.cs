@@ -14,7 +14,7 @@ public class SwaggerServiceInstaller : IServiceInstaller
         {
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "Posts Read API",
+                Title = "Posts Write API",
                 Version = "v1",
             });
 
