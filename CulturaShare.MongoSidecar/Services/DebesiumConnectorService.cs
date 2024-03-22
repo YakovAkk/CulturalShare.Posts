@@ -65,7 +65,7 @@ public class DebesiumConnectorService : IDebesiumConnectorService, IAsyncDisposa
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
     }

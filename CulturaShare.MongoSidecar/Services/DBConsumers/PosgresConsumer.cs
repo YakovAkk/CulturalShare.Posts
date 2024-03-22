@@ -2,10 +2,9 @@
 using CulturalShare.MongoSidecar.Model;
 using CulturalShare.Posts.Data.Extensions;
 using CulturalShare.PostWrite.Domain.Context;
-using MongoDB.Bson;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Linq.Expressions;
 
 namespace CulturaShare.MongoSidecar.Services.DBConsumers
@@ -13,6 +12,7 @@ namespace CulturaShare.MongoSidecar.Services.DBConsumers
     public class PosgresConsumer : IPostgresConsumer
     {
         public async Task Consume<T>(ConsumerConfig kafkaConfig, Func<PostWriteDBContext> createDbContext, IMongoCollection<T> mongoCollection,
+            ILogger<Application.Application> logger,
             params Expression<Func<T, object>>[] includes) where T : class
         {
             var entityType = typeof(T);
@@ -20,6 +20,8 @@ namespace CulturaShare.MongoSidecar.Services.DBConsumers
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(kafkaConfig).Build())
             {
+                logger.LogInformation($"{typeof(T).Name} consumer started working.");
+
                 consumer.Subscribe(topic);
 
                 var cts = new CancellationTokenSource();
@@ -29,26 +31,25 @@ namespace CulturaShare.MongoSidecar.Services.DBConsumers
                 {
                     while (true)
                     {
-                        using (var context = createDbContext())
+                        try
                         {
-                            await ProcessMessage(mongoCollection, includes, consumer, cts, context);
+                            using (var context = createDbContext())
+                            {
+                                await ProcessMessage(mongoCollection, includes, consumer, cts, context);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.LogError($"Error occured while processing entity ex = {ex}, inner exception = {ex.InnerException}");
                         }
                     }
-                }
-                catch (OperationCanceledException)
-                {
-                    // Ctrl + C was pressed, application is terminating.
-                }
-                catch (Exception ex)
-                {
-                    // Handle specific exceptions or log the error
-                    throw;
                 }
                 finally
                 {
                     consumer.Close();
                 }
             }
+            
         }
 
         private async Task ProcessMessage<T>(

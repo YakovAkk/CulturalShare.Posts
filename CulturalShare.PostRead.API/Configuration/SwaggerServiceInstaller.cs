@@ -1,12 +1,13 @@
 ﻿using CulturalShare.PostRead.API.Configuration.Base;
 using Microsoft.OpenApi.Models;
+using Serilog.Core;
 using System.Reflection;
 
 namespace CulturalShare.PostRead.API.Configuration;
 
 public class SwaggerServiceInstaller : IServiceInstaller
 {
-    public void Install(WebApplicationBuilder builder)
+    public void Install(WebApplicationBuilder builder, Logger logger)
     {
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -23,5 +24,7 @@ public class SwaggerServiceInstaller : IServiceInstaller
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             c.IncludeXmlComments(xmlPath);
         });
+
+        logger.Information($"{nameof(HealthCheckServiceInstaller)} installed.");
     }
 }
