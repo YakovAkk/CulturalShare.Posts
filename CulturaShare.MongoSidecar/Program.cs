@@ -6,4 +6,3 @@ var serviceProvider = new ConfigurationApplicationService().SetupServiceProvider
 
 var app = serviceProvider.GetRequiredService<IApplication>();
 await app.RunAsync();
-

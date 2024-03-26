@@ -1,12 +1,13 @@
 ﻿using CulturalShare.PostWrite.API.Configuration.Base;
 using CulturalShare.PostWrite.Repositories.DependencyInjection;
 using CulturalShare.PostWrite.Services.DependencyInjection;
+using Serilog.Core;
 
 namespace CulturalShare.PostWrite.API.Configuration;
 
 public class ApplicationServiceInstaller : IServiceInstaller
 {
-    public void Install(WebApplicationBuilder builder)
+    public void Install(WebApplicationBuilder builder, Logger logger)
     {
         builder.Services.AddPostsWriteRepositories();
         builder.Services.AddPostsReadServices();
@@ -14,5 +15,7 @@ public class ApplicationServiceInstaller : IServiceInstaller
         builder.Services.AddMvc();
         builder.Services.AddControllers();
         builder.Services.AddGrpc();
+
+        logger.Information($"{nameof(ApplicationServiceInstaller)} installed.");
     }
 }

@@ -4,14 +4,14 @@ using CulturaShare.MongoSidecar.Configuration.Base;
 using CulturaShare.MongoSidecar.Model.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Driver.Core.Configuration;
+using Serilog.Core;
 using System.Text.RegularExpressions;
 
 namespace CulturaShare.MongoSidecar.Configuration;
 
 public class ConfigurationServiceInstaller : IServiceInstaller
 {
-    public void Install(IConfigurationRoot configuration, ServiceCollection services)
+    public void Install(IConfigurationRoot configuration, ServiceCollection services, Logger logger)
     {
         var kafkaConfig = configuration
             .GetSection("KafkaConfiguration")
@@ -30,6 +30,8 @@ public class ConfigurationServiceInstaller : IServiceInstaller
 
         var postgresConfig = ParsePostgresConnectionString(configuration.GetConnectionString("PostgresDB"));
         services.AddSingleton(postgresConfig);
+
+        logger.Information($"{nameof(ConfigurationServiceInstaller)} installed.");
     }
 
     public static PostgresConfiguration ParsePostgresConnectionString(string connectionString)
