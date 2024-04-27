@@ -1,9 +1,9 @@
-﻿using CulturalShare.MongoSidecar.Model.Configuration;
-using CulturalShare.Posts.Data.Configuration;
+﻿using CulturalShare.Common.Helper.EnvHelpers;
+using CulturalShare.MongoSidecar.Model.Configuration;
 using CulturaShare.MongoSidecar.Configuration.Base;
-using CulturaShare.MongoSidecar.Model.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Serilog.Core;
 using System.Text.RegularExpressions;
 
@@ -13,23 +13,24 @@ public class ConfigurationServiceInstaller : IServiceInstaller
 {
     public void Install(IConfigurationRoot configuration, ServiceCollection services, Logger logger)
     {
-        var kafkaConfig = configuration
-            .GetSection("KafkaConfiguration")
-            .Get<KafkaConfiguration>();
+        var sortOutCredentialsHelper = new SortOutCredentialsHelper(configuration);
+
+        var kafkaConfig = sortOutCredentialsHelper.GetKafkaConfiguration();
         services.AddSingleton(kafkaConfig);
 
-        var debesiumConfig = configuration
-            .GetSection("DebesiumConfiguration")
-            .Get<DebesiumConfiguration>();
+        var debesiumConfig = sortOutCredentialsHelper.GetDebesiumConfiguration();
         services.AddSingleton(debesiumConfig);
 
-        var mongoConfig = configuration
-            .GetSection("MongoConfiguration")
-            .Get<MongoConfiguration>();
+        var mongoConfig = sortOutCredentialsHelper.GetMongoConfiguration();
         services.AddSingleton(mongoConfig);
 
-        var postgresConfig = ParsePostgresConnectionString(configuration.GetConnectionString("PostgresDB"));
+        var postgresConfig = ParsePostgresConnectionString(sortOutCredentialsHelper.GetPostgresConnectionString("PostgresDB"));
         services.AddSingleton(postgresConfig);
+
+        logger.Information($"{JsonConvert.SerializeObject(mongoConfig)} Mongo Conf.");
+        logger.Information($"{JsonConvert.SerializeObject(postgresConfig)} Postgres Config.");
+        logger.Information($"{JsonConvert.SerializeObject(kafkaConfig)} Kafka Conf.");
+        logger.Information($"{JsonConvert.SerializeObject(debesiumConfig)} Debesium Config.");
 
         logger.Information($"{nameof(ConfigurationServiceInstaller)} installed.");
     }
@@ -70,10 +71,9 @@ public class ConfigurationServiceInstaller : IServiceInstaller
                 }
             }
         }
-        catch (Exception ex)
+        catch
         {
-            // Handle the exception or log the error
-            Console.WriteLine($"Error parsing connection string: {ex.Message}");
+            throw;
         }
 
         return configuration;

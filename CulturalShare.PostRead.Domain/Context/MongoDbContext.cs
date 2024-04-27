@@ -1,4 +1,4 @@
-﻿using CulturalShare.Posts.Data.Configuration;
+﻿using CulturalShare.Common.Helper.Configurations;
 using CulturalShare.Posts.Data.Extensions;
 using MongoDB.Driver;
 

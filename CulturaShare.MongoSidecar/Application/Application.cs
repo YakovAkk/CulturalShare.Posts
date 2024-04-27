@@ -1,12 +1,12 @@
 ﻿using Confluent.Kafka;
 using CulturalShare.Common.DB;
+using CulturalShare.Common.Helper.Configurations;
 using CulturalShare.MongoSidecar.Model;
 using CulturalShare.MongoSidecar.Model.Configuration;
 using CulturalShare.PostRead.Domain.Context;
 using CulturalShare.PostWrite.Domain.Context;
 using CulturaShare.MongoSidecar.Application.Base;
 using CulturaShare.MongoSidecar.Helper;
-using CulturaShare.MongoSidecar.Model.Configuration;
 using CulturaShare.MongoSidecar.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;

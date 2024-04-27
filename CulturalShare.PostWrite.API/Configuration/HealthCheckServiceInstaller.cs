@@ -11,7 +11,7 @@ public class HealthCheckServiceInstaller : IServiceInstaller
         var sortOutCredentialsHelper = new SortOutCredentialsHelper(builder.Configuration);
 
         builder.Services.AddHealthChecks()
-           .AddNpgSql(sortOutCredentialsHelper.DefaultConnectionString, name: "PostWriteDB");
+           .AddNpgSql(sortOutCredentialsHelper.GetPostgresConnectionString(), name: "PostWriteDB");
 
         logger.Information($"{nameof(HealthCheckServiceInstaller)} installed.");
     }

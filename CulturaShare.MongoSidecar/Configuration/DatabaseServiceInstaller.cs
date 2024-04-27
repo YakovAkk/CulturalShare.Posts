@@ -1,4 +1,5 @@
-﻿using CulturalShare.PostRead.Domain.Context;
+﻿using CulturalShare.Common.Helper.EnvHelpers;
+using CulturalShare.PostRead.Domain.Context;
 using CulturalShare.PostWrite.Domain.Context;
 using CulturaShare.MongoSidecar.Configuration.Base;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +13,12 @@ public class DatabaseServiceInstaller : IServiceInstaller
 {
     public void Install(IConfigurationRoot configuration, ServiceCollection services, Logger logger)
     {
+        var sortOutCredentialsHelper = new SortOutCredentialsHelper(configuration);
+
+        var mongoConf = sortOutCredentialsHelper.GetMongoConfiguration();
+
         services.AddDbContext<PostWriteDBContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("PostgresDB")));
+            options.UseNpgsql(sortOutCredentialsHelper.PostgresConnectionString));
 
         services.AddSingleton<MongoDbContext>();
 

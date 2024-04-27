@@ -16,7 +16,7 @@
 	<ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.0" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.0" />
-    <PackageReference Include="CulturalShare.Common.Helper" Version="8.0.14" />
+    <PackageReference Include="CulturalShare.Common.Helper" Version="8.0.20" />
     <PackageReference Include="CulturalShare.Protos" Version="8.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
