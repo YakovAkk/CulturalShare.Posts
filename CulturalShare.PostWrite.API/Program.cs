@@ -14,8 +14,6 @@ builder.InstallServices(logger, typeof(IServiceInstaller).Assembly);
 
 var app = builder.Build();
 
-//app.SeedDatabase();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

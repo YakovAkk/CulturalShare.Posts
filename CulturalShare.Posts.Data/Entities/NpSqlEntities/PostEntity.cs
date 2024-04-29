@@ -20,4 +20,9 @@ public class PostEntity : IPostEntity
     public bool IsDeleted { get; set; }
     public DateTime? DeletedAt { get; set; }
     public ICollection<CommentEntity> Comments { get; set; }
+
+    public PostEntity()
+    {
+        Comments = new List<CommentEntity>();
+    }
 }

@@ -3,7 +3,6 @@ using CulturalShare.PostWrite.Repositories.Repositories.Base;
 using CulturalShare.PostWrite.Services.Services.Base;
 using CultureShare.Foundation.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using PostsReadProto;
 using PostsWriteProto;
 
@@ -12,19 +11,18 @@ namespace CulturalShare.PostWrite.Services.Services;
 public class PostWriteService : IPostWriteService
 {
     private readonly IPostWriteRepository _postWriteRepository;
-    private readonly ILogger<PostWriteService> _log;
 
-    public PostWriteService(IPostWriteRepository postWriteRepository, ILogger<PostWriteService> log)
+    public PostWriteService(
+        IPostWriteRepository postWriteRepository)
     {
         _postWriteRepository = postWriteRepository;
-        _log = log;
     }
 
     public async Task<PostReply> CreatePostAsync(CreatePostRequest request)
     {
         var post = request.MapTo<PostEntity>();
-        var postEntity = _postWriteRepository.Add(post);
 
+        var postEntity = _postWriteRepository.Add(post);
         await _postWriteRepository.SaveChangesAsync();
 
         return postEntity.MapTo<PostReply>();

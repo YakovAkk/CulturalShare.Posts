@@ -48,8 +48,7 @@ namespace CulturaShare.MongoSidecar.Services.DBConsumers
                 {
                     consumer.Close();
                 }
-            }
-            
+            } 
         }
 
         private async Task ProcessMessage<T>(

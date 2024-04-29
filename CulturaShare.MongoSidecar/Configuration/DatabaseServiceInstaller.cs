@@ -18,7 +18,7 @@ public class DatabaseServiceInstaller : IServiceInstaller
         var mongoConf = sortOutCredentialsHelper.GetMongoConfiguration();
 
         services.AddDbContext<PostWriteDBContext>(options =>
-            options.UseNpgsql(sortOutCredentialsHelper.PostgresConnectionString));
+            options.UseNpgsql(sortOutCredentialsHelper.GetPostgresConnectionString("PostgresDB")));
 
         services.AddSingleton<MongoDbContext>();
 
