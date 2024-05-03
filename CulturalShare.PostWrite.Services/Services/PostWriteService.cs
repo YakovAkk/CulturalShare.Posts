@@ -12,7 +12,8 @@ public class PostWriteService : IPostWriteService
 {
     private readonly IPostWriteRepository _postWriteRepository;
 
-    public PostWriteService(IPostWriteRepository postWriteRepository)
+    public PostWriteService(
+        IPostWriteRepository postWriteRepository)
     {
         _postWriteRepository = postWriteRepository;
     }
@@ -20,8 +21,8 @@ public class PostWriteService : IPostWriteService
     public async Task<PostReply> CreatePostAsync(CreatePostRequest request)
     {
         var post = request.MapTo<PostEntity>();
-        var postEntity = _postWriteRepository.Add(post);
 
+        var postEntity = _postWriteRepository.Add(post);
         await _postWriteRepository.SaveChangesAsync();
 
         return postEntity.MapTo<PostReply>();
@@ -54,7 +55,7 @@ public class PostWriteService : IPostWriteService
 
         if (postEntity == null)
         {
-            throw new BadRequestException($"Posts doesn't exists");
+            throw new BadRequestException($"Posts with Id = {request.PostId} doesn't exists");
         }
 
         postEntity.Caption = request.Caption;

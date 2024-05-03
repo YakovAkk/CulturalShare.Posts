@@ -9,6 +9,7 @@ public static class RepositoriesExtensions
     public static IServiceCollection AddPostsWriteRepositories(this IServiceCollection services)
     {
         services.AddScoped<IPostWriteRepository, PostWriteRepository>();
+        services.AddScoped<ICommentWriteRepository, CommentWriteRepository>();
 
         return services;
     }

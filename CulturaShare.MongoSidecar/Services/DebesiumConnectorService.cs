@@ -1,7 +1,7 @@
 ﻿using System.Text;
+using CulturalShare.Common.Helper.Configurations;
 using CulturalShare.MongoSidecar.Model.Configuration;
 using CulturalShare.Posts.Data.Extensions;
-using CulturaShare.MongoSidecar.Model.Configuration;
 using CulturaShare.MongoSidecar.Model.ConnectorModel;
 using CulturaShare.MongoSidecar.Model.Exceptions;
 using CulturaShare.MongoSidecar.Services.Base;
@@ -65,7 +65,7 @@ public class DebesiumConnectorService : IDebesiumConnectorService, IAsyncDisposa
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
         }
     }

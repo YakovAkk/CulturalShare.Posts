@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using CulturaShare.MongoSidecar.DependencyInjection;
 using CulturaShare.MongoSidecar.Configuration.Base;
+using Serilog;
 
 namespace CulturaShare.MongoSidecar;
 
@@ -14,7 +15,11 @@ public class ConfigurationApplicationService
         .Build();
 
         var services = new ServiceCollection();
-        services.InstallServices(configuration, typeof(IServiceInstaller).Assembly);
+        var logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .CreateLogger();
+
+        services.InstallServices(logger, configuration, typeof(IServiceInstaller).Assembly);
         return services.BuildServiceProvider();
     }
 }

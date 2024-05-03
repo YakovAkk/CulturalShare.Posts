@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "CulturalShare.MongoSidecar": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_RUNNING_IN_CONTAINER": "false"
+      }
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
