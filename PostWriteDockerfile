@@ -1,4 +1,5 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+# See https://aka.ms/customizecontainer to learn how to customize your debug container 
+# and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
@@ -8,22 +9,44 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
+ARG YakovAkk
+ARG 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
+
 WORKDIR /src
+
+# Copy nuget.config and set GitHub credentials
+COPY ./nuget.config ./
+RUN sed -i "s/%GITHUB_USERNAME%/$GITHUB_USERNAME/g" nuget.config
+RUN sed -i "s/%GITHUB_TOKEN%/$GITHUB_TOKEN/g" nuget.config
+
+# Copy project files
 COPY ["./CulturalShare.PostWrite.API/CulturalShare.PostWrite.API.csproj", "CulturalShare.PostWrite.API/"]
 COPY ["./CulturalShare.PostWrite.Domain/CulturalShare.PostWrite.Domain.csproj", "CulturalShare.PostWrite.Domain/"]
 COPY ["./CulturalShare.Posts.Data/CulturalShare.Posts.Data.csproj", "CulturalShare.Posts.Data/"]
 COPY ["./CulturalShare.PostWrite.Repositories/CulturalShare.PostWrite.Repositories.csproj", "CulturalShare.PostWrite.Repositories/"]
 COPY ["./CulturalShare.PostWrite.Services/CulturalShare.PostWrite.Services.csproj", "CulturalShare.PostWrite.Services/"]
+
+# Restore dependencies
 RUN dotnet restore "./CulturalShare.PostWrite.API/CulturalShare.PostWrite.API.csproj"
+
+# Copy the rest of the project files
 COPY . .
+
 WORKDIR "/src/CulturalShare.PostWrite.API"
+
+# Build the project
 RUN dotnet build "./CulturalShare.PostWrite.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
+
+# Publish the project
 RUN dotnet publish "./CulturalShare.PostWrite.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
+
+# Copy the published output to the final image
 COPY --from=publish /app/publish .
+
 ENTRYPOINT ["dotnet", "CulturalShare.PostWrite.API.dll"]
