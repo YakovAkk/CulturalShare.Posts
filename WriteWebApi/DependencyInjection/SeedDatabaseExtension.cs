@@ -14,18 +14,18 @@ public static class SeedDatabaseExtension
                 var dbContextDealerPortal = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 for (int i = 0; i < 10000; i++)
                 {
-                    dbContextDealerPortal.Posts.Add(new PostEntity()
+                    dbContextDealerPortal.Posts.Add(new PostSqlEntity()
                     {
                         Caption = i.ToString() + "Caption",
                         CreatedAt = DateTime.UtcNow,
                         ImageUrl = i.ToString() + "Image",
                         Likes = 0,
-                        OwnerId = i,
-                        Comments = new List<CommentEntity>()
+                        UserId = i,
+                        Comments = new List<CommentSqlEntity>()
                         {
                             new()
                             {
-                                OwnerId = i,
+                                UserId = i,
                                 Text = i.ToString() + "Text",
                                 CreatedAt = DateTime.UtcNow,
                                 Username = "test",

@@ -5,7 +5,7 @@ using Monto.Repositories;
 
 namespace CulturalShare.PostWrite.Repositories.Repositories;
 
-public class PostWriteRepository : EntityFrameworkRepository<PostEntity>, IPostWriteRepository
+public class PostWriteRepository : EntityFrameworkRepository<PostSqlEntity>, IPostWriteRepository
 {
     public PostWriteRepository(DbContext context) : base(context)
     {

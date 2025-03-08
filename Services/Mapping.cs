@@ -13,7 +13,7 @@ public static class Mapping
     {
         mapper = new MapperInstance();
 
-        mapper.AddMap<PostEntity, PostReply>((from) =>
+        mapper.AddMap<PostSqlEntity, PostReply>((from) =>
         {
             var viewModel = new PostReply().InjectFrom(from) as PostReply;
             viewModel.CreatedAt = Timestamp.FromDateTime(from.CreatedAt);

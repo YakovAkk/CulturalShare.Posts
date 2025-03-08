@@ -3,6 +3,6 @@ using Monto.Repositories;
 
 namespace CulturalShare.PostWrite.Repositories.Repositories.Base;
 
-public interface IPostWriteRepository : IRepository<PostEntity>
+public interface IPostWriteRepository : IRepository<PostSqlEntity>
 {
 }
