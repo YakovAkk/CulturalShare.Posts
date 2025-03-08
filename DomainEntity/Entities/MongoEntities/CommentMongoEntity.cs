@@ -13,7 +13,7 @@ public class CommentMongoEntity : ICommentEntity
     public int Id { get; set; }
     public string Username { get; set; }
     public string Text { get; set; }
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
     public int UserId { get; set; }
     public PostMongoEntity Post { get; set; }

@@ -1,6 +1,7 @@
 ﻿using CulturalShare.Posts.Data.Entities.Base;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace CulturalShare.Posts.Data.Entities.NpSqlEntities;
 
@@ -19,6 +20,8 @@ public class PostSqlEntity : IPostEntity
     public int UserId { get; set; }
     public bool IsDeleted { get; set; }
     public DateTime? DeletedAt { get; set; }
+
+    [JsonIgnore]
     public ICollection<CommentSqlEntity> Comments { get; set; }
 
     public PostSqlEntity()
