@@ -20,7 +20,7 @@ public class PostWriteService : IPostWriteService
 
     public async Task<PostReply> CreatePostAsync(CreatePostRequest request)
     {
-        var post = request.MapTo<PostEntity>();
+        var post = request.MapTo<PostSqlEntity>();
 
         var postEntity = _postWriteRepository.Add(post);
         await _postWriteRepository.SaveChangesAsync();
@@ -70,7 +70,7 @@ public class PostWriteService : IPostWriteService
 
     #region Private
 
-    private async Task<PostEntity> GetPostById(int postId)
+    private async Task<PostSqlEntity> GetPostById(int postId)
     {
         return await _postWriteRepository
             .GetAll()

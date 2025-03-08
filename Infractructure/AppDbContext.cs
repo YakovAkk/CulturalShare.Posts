@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CulturalShare.Posts.Data.Entities.NpSqlEntities;
+using Microsoft.EntityFrameworkCore;
 
 namespace CulturalShare.PostWrite.Domain.Context;
 
 public class AppDbContext : DbContext
 {
-    public DbSet<Posts.Data.Entities.NpSqlEntities.CommentEntity> Comments { get; set; }
-    public DbSet<Posts.Data.Entities.NpSqlEntities.PostEntity> Posts { get; set; }
+    public DbSet<CommentSqlEntity> Comments { get; set; }
+    public DbSet<PostSqlEntity> Posts { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -21,8 +22,8 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Posts.Data.Entities.NpSqlEntities.PostEntity>().ToTable("posts");
-        modelBuilder.Entity<Posts.Data.Entities.NpSqlEntities.CommentEntity>().ToTable("comments");
+        modelBuilder.Entity<PostSqlEntity>().ToTable("posts");
+        modelBuilder.Entity<CommentSqlEntity>().ToTable("comments");
 
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {

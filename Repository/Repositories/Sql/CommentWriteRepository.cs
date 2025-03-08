@@ -5,7 +5,7 @@ using Monto.Repositories;
 
 namespace CulturalShare.PostWrite.Repositories.Repositories;
 
-public class CommentWriteRepository : EntityFrameworkRepository<CommentEntity>, ICommentWriteRepository
+public class CommentWriteRepository : EntityFrameworkRepository<CommentSqlEntity>, ICommentWriteRepository
 {
     public CommentWriteRepository(DbContext context) : base(context)
     {

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace CulturalShare.Posts.Data.Entities.NpSqlEntities;
 
 [Table("posts")]
-public class PostEntity : IPostEntity
+public class PostSqlEntity : IPostEntity
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -16,13 +16,13 @@ public class PostEntity : IPostEntity
     public DateTime? UpdatedAt { get; set; }
     public string? ImageUrl { get; set; }
     public int Likes { get; set; }
-    public int OwnerId { get; set; }
+    public int UserId { get; set; }
     public bool IsDeleted { get; set; }
     public DateTime? DeletedAt { get; set; }
-    public ICollection<CommentEntity> Comments { get; set; }
+    public ICollection<CommentSqlEntity> Comments { get; set; }
 
-    public PostEntity()
+    public PostSqlEntity()
     {
-        Comments = new List<CommentEntity>();
+        Comments = new List<CommentSqlEntity>();
     }
 }

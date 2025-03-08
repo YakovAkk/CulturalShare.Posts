@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace CulturalShare.Posts.Data.Entities.MongoEntities;
 
 [Table("posts")]
-public class PostEntity : IPostEntity
+public class PostMongoEntity : IPostEntity
 {
     [BsonId]
     [BsonRepresentation(BsonType.Int32)]
@@ -17,8 +17,8 @@ public class PostEntity : IPostEntity
     public string? ImageUrl { get; set; }
     public int Likes { get; set; }
     public string? Text { get; set; }
-    public int OwnerId { get; set; }
+    public int UserId { get; set; }
     public bool IsDeleted { get; set; }
     public DateTime? DeletedAt { get; set; }
-    public ICollection<CommentEntity> Comments { get; set; }
+    public ICollection<CommentMongoEntity> Comments { get; set; }
 }

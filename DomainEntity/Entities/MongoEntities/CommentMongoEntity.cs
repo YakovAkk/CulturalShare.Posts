@@ -1,19 +1,20 @@
 ﻿using CulturalShare.Posts.Data.Entities.Base;
-using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CulturalShare.Posts.Data.Entities.NpSqlEntities;
+namespace CulturalShare.Posts.Data.Entities.MongoEntities;
 
 [Table("comments")]
-public class CommentEntity : ICommentEntity
+public class CommentMongoEntity : ICommentEntity
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [BsonId]
+    [BsonRepresentation(BsonType.Int32)]
     public int Id { get; set; }
     public string Username { get; set; }
     public string Text { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime? UpdatedAt { get; set; }
-    public int OwnerId { get; set; }
-    public PostEntity Post { get; set; }
+    public int UserId { get; set; }
+    public PostMongoEntity Post { get; set; }
 }

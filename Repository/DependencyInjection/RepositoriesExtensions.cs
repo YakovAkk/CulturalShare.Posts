@@ -13,7 +13,7 @@ public static class RepositoriesExtensions
     {
         services.AddScoped<IPostWriteRepository, PostWriteRepository>();
         services.AddScoped<ICommentWriteRepository, CommentWriteRepository>();
-        services.AddScoped<IPostReadRepository<PostEntity>, PostReadRepository<PostEntity>>();
+        services.AddScoped<IPostReadRepository<PostMongoEntity>, PostReadRepository<PostMongoEntity>>();
 
         return services;
     }

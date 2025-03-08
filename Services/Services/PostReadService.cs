@@ -9,9 +9,9 @@ namespace CulturalShare.PostRead.Services.Services;
 
 public class PostReadService : IPostReadService
 {
-    private readonly IPostReadRepository<PostEntity> _postRepository;
+    private readonly IPostReadRepository<PostMongoEntity> _postRepository;
 
-    public PostReadService(IPostReadRepository<PostEntity> postRepository)
+    public PostReadService(IPostReadRepository<PostMongoEntity> postRepository)
     {
         _postRepository = postRepository;
     }
