@@ -1,4 +1,4 @@
-﻿using CulturalShare.Common.Helper.Configurations;
+﻿using CulturalShare.Foundation.EntironmentHelper.Configurations;
 using CulturalShare.MongoSidecar.Model.Configuration;
 using CulturalShare.Posts.Data.Extensions;
 using CulturaShare.MongoSidecar.Model.ConnectorModel;

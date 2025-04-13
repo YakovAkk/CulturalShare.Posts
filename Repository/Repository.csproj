@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="CulturalShare.Repositories" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
-    <PackageReference Include="MongoDB.Driver" Version="2.25.0" />
+	<PackageReference Include="CulturalShare.Repositories" Version="9.0.0-CUL-20" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.4" />
+    <PackageReference Include="MongoDB.Driver" Version="3.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DomainEntity\DomainEntity.csproj" />
-    <ProjectReference Include="..\Infractructure\Infractructure.csproj" />
+    <ProjectReference Include="..\MongoDb.Infranstructure\MongoDb.Infranstructure.csproj" />
   </ItemGroup>
 
 </Project>

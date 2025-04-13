@@ -1,9 +1,9 @@
 ﻿using Confluent.Kafka;
-using CulturalShare.Common.DB;
-using CulturalShare.Common.Helper.Configurations;
+using CulturalShare.Foundation.EntironmentHelper.Configurations;
 using CulturalShare.MongoSidecar.Model;
 using CulturalShare.MongoSidecar.Model.Configuration;
 using CulturalShare.PostWrite.Domain.Context;
+using CulturalShare.Repositories;
 using CulturaShare.MongoSidecar.Application.Base;
 using CulturaShare.MongoSidecar.Helper;
 using CulturaShare.MongoSidecar.Services;
@@ -80,6 +80,7 @@ public class Application : DbService<AppDbContext>, IApplication
 
             return _consumerFactory.CreateConsumerForEntityType(model);
         });
+
         await Task.WhenAll(consumers);
     }
 }

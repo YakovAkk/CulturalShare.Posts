@@ -2,129 +2,153 @@
 using CulturalShare.MongoSidecar.Model;
 using CulturalShare.Posts.Data.Extensions;
 using CulturalShare.PostWrite.Domain.Context;
+using DomainEntity.Entities;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using MX.Database.Entities;
 using Newtonsoft.Json;
 using System.Linq.Expressions;
 
-namespace CulturaShare.MongoSidecar.Services.DBConsumers
+namespace CulturaShare.MongoSidecar.Services.DBConsumers;
+
+public class PosgresConsumer : IPostgresConsumer
 {
-    public class PosgresConsumer : IPostgresConsumer
+    private readonly JsonSerializerSettings _serializerSettings;
+
+    public PosgresConsumer()
     {
-        public async Task Consume<T>(ConsumerConfig kafkaConfig, Func<AppDbContext> createDbContext, IMongoCollection<T> mongoCollection,
-            ILogger<Application.Application> logger,
-            params Expression<Func<T, object>>[] includes) where T : class
+        _serializerSettings = new JsonSerializerSettings
         {
-            var entityType = typeof(T);
-            var topic = $"source.public.{entityType.GetTableAttributeValue()}";
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+        };
+    }
 
-            using (var consumer = new ConsumerBuilder<Ignore, string>(kafkaConfig).Build())
-            {
-                logger.LogInformation($"{typeof(T).Name} consumer started working.");
+    public async Task Consume<T>(ConsumerForEntityTypeModel consumerForEntityTypeModel,
+        params Expression<Func<T, object>>[] includes) where T : BaseEntity<int>
+    {
+        var entityType = typeof(T);
+        var collection = consumerForEntityTypeModel.MongoDbContext.GetCollection<T>();
+        var topic = $"source.public.{entityType.GetTableAttributeValue()}";
 
-                consumer.Subscribe(topic);
+        using var consumer = new ConsumerBuilder<Ignore, string>(consumerForEntityTypeModel.KafkaConfig).Build();
+        consumerForEntityTypeModel.Logger.LogInformation($"{entityType.Name} consumer started working.");
 
-                var cts = new CancellationTokenSource();
-                Console.CancelKeyPress += (_, e) => { e.Cancel = true; cts.Cancel(); };
+        consumer.Subscribe(topic);
 
-                try
-                {
-                    while (true)
-                    {
-                        try
-                        {
-                            using (var context = createDbContext())
-                            {
-                                await ProcessMessage(mongoCollection, includes, consumer, cts, context);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.LogError($"Error occured while processing entity ex = {ex}, inner exception = {ex.InnerException}");
-                        }
-                    }
-                }
-                finally
-                {
-                    consumer.Close();
-                }
-            }
+        var cts = new CancellationTokenSource();
+        Console.CancelKeyPress += (_, e) => { e.Cancel = true; cts.Cancel(); };
+
+        try
+        {
+            await ConsumeMessagesAsync(consumer, collection, includes, cts.Token, consumerForEntityTypeModel);
         }
+        catch (OperationCanceledException)
+        {
+            consumerForEntityTypeModel.Logger.LogInformation("Consumption was cancelled.");
+        }
+        catch (Exception ex)
+        {
+            consumerForEntityTypeModel.Logger.LogError(ex, "An error occurred while consuming messages");
+            throw;
+        }
+        finally
+        {
+            consumer.Close();
+        }
+    }
 
-        private async Task ProcessMessage<T>(
-            IMongoCollection<T> mongoCollection,
-            Expression<Func<T, object>>[] includes,
-            IConsumer<Ignore, string> consumer,
-            CancellationTokenSource cts,
-            AppDbContext context) where T : class
+    private async Task ConsumeMessagesAsync<T>(
+        IConsumer<Ignore, string> consumer,
+        IMongoCollection<T> collection,
+        Expression<Func<T, object>>[] includes,
+        CancellationToken cancellationToken,
+        ConsumerForEntityTypeModel consumerForEntityTypeModel) where T : class
+    {
+        while (!cancellationToken.IsCancellationRequested)
         {
             try
             {
-                var consumeResult = consumer.Consume(cts.Token);
-                var model = GetModelFromMessage(consumeResult.Message.Value);
-
-                if (model.After != null)
-                {
-                    await CreateOrUpdateEntity(model.After.Id, mongoCollection, includes, context);
-                }
-                else if (model.Before != null)
-                {
-                    await DeleteEntity(model.Before.Id, mongoCollection);
-                }
+                using var context = consumerForEntityTypeModel.CreateDbContext();
+                await ProcessMessageAsync(collection, includes, consumer, context, cancellationToken);
             }
             catch (Exception ex)
             {
-                // Handle the exception as needed
-                var errorMessage = ex.Message;
+                consumerForEntityTypeModel.Logger.LogError(ex, "Error occurred while processing message"); 
             }
         }
+    }
 
-        private async Task DeleteEntity<T>(int id, IMongoCollection<T> mongoCollection) where T : class
+    private async Task ProcessMessageAsync<T>(
+        IMongoCollection<T> collection,
+        Expression<Func<T, object>>[] includes,
+        IConsumer<Ignore, string> consumer,
+        AppDbContext context,
+        CancellationToken cancellationToken) where T : class
+    {
+        var consumeResult = consumer.Consume(cancellationToken);
+        var model = GetModelFromMessage(consumeResult.Message.Value);
+
+        if (model.After != null)
         {
-            var filter = Builders<T>.Filter.Eq("_id", id);
-            await mongoCollection.DeleteOneAsync(filter);
+            await HandleEntityUpdateAsync(model.After.Id, collection, includes, context);
+        }
+        else if (model.Before != null)
+        {
+            await HandleEntityDeletionAsync(model.Before.Id, collection);
+        }
+    }
+
+    private async Task HandleEntityUpdateAsync<T>(
+        int id,
+        IMongoCollection<T> collection,
+        Expression<Func<T, object>>[] includes,
+        AppDbContext context) where T : class
+    {
+        var entity = await context.GetEntityByIdAsync(id, includes);
+        if (entity == null)
+        {
+            return;
         }
 
-        private async Task CreateOrUpdateEntity<T>(int id, IMongoCollection<T> mongoCollection, Expression<Func<T, object>>[] includes, AppDbContext context) where T : class
-        {
-            // Check if document with the given ID already exists
-            var existingDocument = await mongoCollection.Find(Builders<T>.Filter.Eq("_id", id)).FirstOrDefaultAsync();
-            var entity = await context.GetEntityByIdAsync(id, includes);
-            var mongoEntity = GetMongoEntity(entity);
-            if (existingDocument != null)
-            {
-                var updateResult = await mongoCollection.ReplaceOneAsync(
-                    Builders<T>.Filter.Eq("_id", id),
-                    mongoEntity,
-                    new ReplaceOptions { IsUpsert = false });
-            }
-            else
-            {
-                await mongoCollection.InsertOneAsync(mongoEntity);
-            }
-        }
+        var mongoEntity = GetMongoEntity(entity);
+        var existingDocument = await collection.Find(Builders<T>.Filter.Eq("_id", id)).FirstOrDefaultAsync();
 
-        private T GetMongoEntity<T>(T entity)
+        if (existingDocument != null)
         {
-            var serializerSettings = new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            };
-            var json = JsonConvert.SerializeObject(entity, serializerSettings);
-            return JsonConvert.DeserializeObject<T>(json);
+            await collection.ReplaceOneAsync(
+                Builders<T>.Filter.Eq("_id", id),
+                mongoEntity,
+                new ReplaceOptions { IsUpsert = false });
         }
-
-        private ChangeEvent GetModelFromMessage(string message)
+        else
         {
-            try
-            {
-                var changeEvent = JsonConvert.DeserializeObject<ChangeEvent>(message);
-                return changeEvent;
-            }
-            catch
-            {
-                return new ChangeEvent();
-            }
+            await collection.InsertOneAsync(mongoEntity);
+        }
+    }
+
+    private async Task HandleEntityDeletionAsync<T>(int id, IMongoCollection<T> collection) where T : class
+    {
+        var filter = Builders<T>.Filter.Eq("_id", id);
+        await collection.DeleteOneAsync(filter);
+    }
+
+    private T GetMongoEntity<T>(T entity)
+    {
+        var json = JsonConvert.SerializeObject(entity, _serializerSettings);
+        return JsonConvert.DeserializeObject<T>(json) 
+            ?? throw new InvalidOperationException($"Failed to deserialize entity of type {typeof(T).Name}");
+    }
+
+    private ChangeEvent GetModelFromMessage(string message)
+    {
+        try
+        {
+            return JsonConvert.DeserializeObject<ChangeEvent>(message) 
+                ?? throw new InvalidOperationException("Failed to deserialize message");
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"Failed to deserialize message: {message}", ex);
         }
     }
 }

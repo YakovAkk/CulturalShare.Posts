@@ -1,36 +1,45 @@
 ﻿using CulturalShare.PostRead.Services.Services.Base;
-using CulturalShare.Posts.Data.Entities.MongoEntities;
-using CulturalShare.PostWrite.Services;
-using CultureShare.Foundation.Exceptions;
+using DomainEntity.Entities;
+using ErrorOr;
+using Microsoft.EntityFrameworkCore;
 using PostsReadProto;
 using Repositories.Repositories.Mongo.Base;
+using Service.Mapping;
 
 namespace CulturalShare.PostRead.Services.Services;
 
 public class PostReadService : IPostReadService
 {
-    private readonly IPostReadRepository<PostMongoEntity> _postRepository;
+    private readonly IPostReadRepository<PostEntity> _postRepository;
 
-    public PostReadService(IPostReadRepository<PostMongoEntity> postRepository)
+    public PostReadService(IPostReadRepository<PostEntity> postRepository)
     {
         _postRepository = postRepository;
     }
 
-    public async Task<PostReply> GetPostByIdAsync(GetPostByIdRequest request)
+    public async Task<ErrorOr<PostResponse>> GetPostAsync(GetPostRequest request, CancellationToken cancellationToken)
     {
-        var post = await _postRepository.GetPostByIdAsync(request.Id);
+        var post = await _postRepository.GetByIdAsync(request.PostId);
 
         if (post == null)
         {
-            throw new BadRequestException("Post doesn't exist!");
+            return Error.Conflict("Post doesn't exist.");
         }
 
-        return post.MapTo<PostReply>();
+        return post.ToPostResponse();
     }
 
-    public async Task<List<PostReply>> GetPostsAsync()
+    public async Task<ErrorOr<List<PostResponse>>> GetPostsPaginatedAsync(PostsPagedFilterRequest request, CancellationToken cancellationToken)
     {
-        var posts = await _postRepository.GetAllAsync();
-        return posts.Select(x => x.MapTo<PostReply>()).ToList();
+        var query = _postRepository.GetAll();
+
+        var paginatedPosts = await query
+            .Skip((request.PageIndex - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .ToListAsync(cancellationToken);
+
+        var postResponses = paginatedPosts.Select(post => post.ToPostResponse()).ToList();
+
+        return postResponses;
     }
 }

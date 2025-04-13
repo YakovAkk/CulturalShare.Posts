@@ -1,7 +1,9 @@
-﻿namespace Repositories.Repositories.Mongo.Base;
+﻿using MX.Database.Entities;
 
-public interface IPostReadRepository<T>
+namespace Repositories.Repositories.Mongo.Base;
+
+public interface IPostReadRepository<T> where T : BaseEntity<int>
 {
-    Task<List<T>> GetAllAsync();
-    Task<T> GetPostByIdAsync(int id);
+    IQueryable<T> GetAll();
+    Task<T> GetByIdAsync(int id);
 }
