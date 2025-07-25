@@ -31,7 +31,8 @@ public class PostReadService : IPostReadService
 
     public async Task<ErrorOr<List<PostResponse>>> GetPostsPaginatedAsync(PostsPagedFilterRequest request, CancellationToken cancellationToken)
     {
-        var query = _postRepository.GetAll();
+        var query = _postRepository.GetAll()
+            .Where(p => !p.IsDeleted);
 
         var paginatedPosts = await query
             .Skip((request.PageIndex - 1) * request.PageSize)

@@ -176,7 +176,7 @@ public class PostWriteService : IPostWriteService
                 IsDeleted = false
             };
 
-            _likeWriteRepository.Update(like);
+            _likeWriteRepository.Add(like);
             await _likeWriteRepository.SaveChangesAsync();
 
             return EmptyResponse.Instance;

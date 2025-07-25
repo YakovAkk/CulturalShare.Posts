@@ -1,4 +1,5 @@
 ﻿using DomainEntity.Entities;
+using ErrorOr;
 using Google.Protobuf.WellKnownTypes;
 using PostsReadProto;
 using Riok.Mapperly.Abstractions;
@@ -16,7 +17,9 @@ public static partial class ResponseMapper
             AuthorId = postEntity.UserId,
             Content = postEntity.Text,
             CreatedAt = Timestamp.FromDateTime(postEntity.CreatedAt),
-            UpdatedAt = Timestamp.FromDateTime(postEntity.UpdatedAt.Value)
+            UpdatedAt = postEntity.UpdatedAt.HasValue
+                   ? Timestamp.FromDateTime(postEntity.UpdatedAt.Value)
+                   : Timestamp.FromDateTime(DateTime.UtcNow)
         };
 
         postResponse.Comments.AddRange(postEntity.Comments.Select(comment => new CommentResponse
