@@ -1,4 +1,4 @@
-﻿using CulturalShare.PostRead.API.Configuration.Base;
+﻿using Dependency.Infranstructure.Configuration.Base;
 using Serilog.Core;
 using System.Reflection;
 

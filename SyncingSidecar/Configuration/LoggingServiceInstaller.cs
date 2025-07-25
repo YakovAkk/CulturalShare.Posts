@@ -1,4 +1,4 @@
-﻿using CulturalShare.Common.Helper.EnvHelpers;
+﻿using CulturalShare.Foundation.EntironmentHelper.EnvHelpers;
 using CulturaShare.MongoSidecar.Configuration.Base;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

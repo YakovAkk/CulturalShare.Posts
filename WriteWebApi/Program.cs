@@ -1,6 +1,6 @@
-using CulturalShare.PostWrite.API.Configuration.Base;
 using CulturalShare.PostWrite.API.DependencyInjection;
 using CulturalShare.PostWrite.API.Services;
+using Dependency.Infranstructure.Configuration.Base;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
@@ -23,7 +23,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGrpcService<PostsWriteService>();
+app.MapGrpcService<PostsWriteGrpcService>();
 
 if (app.Environment.IsDevelopment())
 {

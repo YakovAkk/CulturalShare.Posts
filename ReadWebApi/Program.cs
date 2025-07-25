@@ -1,6 +1,6 @@
-using CulturalShare.PostRead.API.Configuration.Base;
 using CulturalShare.PostRead.API.DependencyInjection;
 using CulturalShare.PostRead.API.Services;
+using Dependency.Infranstructure.Configuration.Base;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
+
 builder.InstallServices(logger, typeof(IServiceInstaller).Assembly);
 
 var app = builder.Build();
@@ -22,7 +23,7 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGrpcService<PostsReadService>();
+app.MapGrpcService<PostsReadGrpcService>();
 
 if (app.Environment.IsDevelopment())
 {

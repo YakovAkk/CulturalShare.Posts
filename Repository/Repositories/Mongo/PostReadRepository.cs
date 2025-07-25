@@ -1,11 +1,12 @@
-﻿using CulturalShare.Common.DB.Entites;
-using Infractructure;
+﻿using Infractructure;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using MX.Database.Entities;
 using Repositories.Repositories.Mongo.Base;
 
 namespace Repositories.Repositories.Mongo;
 
-public class PostReadRepository<T> : IPostReadRepository<T> where T : IBaseEntity
+public class PostReadRepository<T> : IPostReadRepository<T> where T : BaseEntity<int>
 {
     private readonly IMongoCollection<T> _mongoCollection;
     public PostReadRepository(AppMongoDbContext mongoDbContext)
@@ -13,24 +14,17 @@ public class PostReadRepository<T> : IPostReadRepository<T> where T : IBaseEntit
         _mongoCollection = mongoDbContext.GetCollection<T>();
     }
 
-    public async Task<List<T>> GetAllAsync()
+    public IQueryable<T> GetAll()
     {
-        var documents = await _mongoCollection
-            .AsQueryable()
-            .ToListAsync();
-
-        return documents;
+        return _mongoCollection.AsQueryable();
     }
 
-    public async Task<T> GetPostByIdAsync(int id)
+    public async Task<T> GetByIdAsync(int id)
     {
-        var entity = _mongoCollection
+        var document = await _mongoCollection
             .AsQueryable()
-            .Where(x => x.Id == id)
-            .ToList();
+            .FirstOrDefaultAsync(x => x.Id == id);
 
-        var document = await _mongoCollection.FindAsync(x => x.Id == id);
-
-        return entity.FirstOrDefault();
+        return document;
     }
 }

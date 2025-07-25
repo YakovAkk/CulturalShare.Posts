@@ -1,13 +1,19 @@
-﻿using CulturalShare.Posts.Data.Entities.NpSqlEntities;
-using CulturalShare.PostWrite.Repositories.Repositories.Base;
+﻿using CulturalShare.PostWrite.Repositories.Repositories.Base;
+using CulturalShare.Repositories;
+using DomainEntity.Entities;
 using Microsoft.EntityFrameworkCore;
-using Monto.Repositories;
 
 namespace CulturalShare.PostWrite.Repositories.Repositories;
 
-public class PostWriteRepository : EntityFrameworkRepository<PostSqlEntity>, IPostWriteRepository
+public class PostWriteRepository : EntityFrameworkRepository<PostEntity>, IPostWriteRepository
 {
     public PostWriteRepository(DbContext context) : base(context)
     {
+    }
+
+    public Task<PostEntity> GetByIdAsync(int postId, CancellationToken cancellationToken)
+    {
+        return GetAll()
+            .FirstOrDefaultAsync(x => x.Id == postId, cancellationToken);
     }
 }

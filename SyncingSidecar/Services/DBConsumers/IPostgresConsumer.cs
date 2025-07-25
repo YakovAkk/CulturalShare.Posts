@@ -1,14 +1,10 @@
-﻿using Confluent.Kafka;
-using CulturalShare.PostWrite.Domain.Context;
-using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
+﻿using CulturalShare.MongoSidecar.Model;
+using MX.Database.Entities;
 using System.Linq.Expressions;
 
 namespace CulturaShare.MongoSidecar.Services.DBConsumers;
 
 public interface IPostgresConsumer
 {
-    Task Consume<T>(ConsumerConfig kafkaConfig, Func<AppDbContext> createDbContext, IMongoCollection<T> mongoCollection,
-        ILogger<Application.Application> logger,
-           params Expression<Func<T, object>>[] includes) where T : class;
+    Task Consume<T>(ConsumerForEntityTypeModel consumerForEntityTypeModel, params Expression<Func<T, object>>[] includes) where T : BaseEntity<int>;
 }
