@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="CulturalShare.Repositories" Version="9.0.0-CUL-20" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.4" />
-    <PackageReference Include="MongoDB.Driver" Version="3.3.0" />
+	<PackageReference Include="CulturalShare.Repositories" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="MongoDB.Driver" />
   </ItemGroup>
 
   <ItemGroup>

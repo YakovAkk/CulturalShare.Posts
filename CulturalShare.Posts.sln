@@ -35,6 +35,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dependency.Infranstructure"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDb.Infranstructure", "MongoDb.Infranstructure\MongoDb.Infranstructure.csproj", "{4BCA1ACD-99E8-40DE-83C0-C496D2C4A9A1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{118DA965-AA7D-49A8-8D27-66DC312FB677}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Packages.props = Directory.Packages.props
+		MongoSideCarDockerfile = MongoSideCarDockerfile
+		NuGet.Config = NuGet.Config
+		PostReadDockerfile = PostReadDockerfile
+		PostWriteDockerfile = PostWriteDockerfile
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

@@ -7,8 +7,8 @@
   </PropertyGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="CulturalShare.Foundation.EntironmentHelper" Version="9.0.0-CUL-20" />
-		<PackageReference Include="MongoDB.Driver" Version="3.3.0" />
+		<PackageReference Include="CulturalShare.Foundation.EntironmentHelper" />
+		<PackageReference Include="MongoDB.Driver" />
 	</ItemGroup>
 	
 	<ItemGroup>
